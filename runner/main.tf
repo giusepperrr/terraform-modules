@@ -169,7 +169,6 @@ resource "aws_instance" "runner" {
 
   lifecycle {
     ignore_changes = [
-      ami,
       user_data,
     ]
   }
