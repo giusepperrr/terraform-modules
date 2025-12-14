@@ -54,16 +54,27 @@ variable "api_url" {
   type        = string
 }
 
-variable "runner_token" {
-  description = "Daytona runner authentication token"
+variable "api_key" {
+  description = "Daytona API key"
   type        = string
   sensitive   = true
+}
+
+variable "region_id" {
+  description = "Daytona region ID"
+  type        = string
+}
+
+variable "runner_name" {
+  description = "Name for the runner (used in API registration)"
+  type        = string
+  default     = null
 }
 
 variable "runner_version" {
   description = "Daytona runner version"
   type        = string
-  default     = "0.1.0"
+  default     = "0.125.0-rc1"
 }
 
 # Runner Configuration (optional)
@@ -96,6 +107,37 @@ variable "enable_ssm" {
   description = "Enable AWS Systems Manager Session Manager access"
   type        = bool
   default     = true
+}
+
+variable "additional_security_group_ids" {
+  description = "Additional security group IDs to attach to the runner instance"
+  type        = list(string)
+  default     = []
+}
+
+variable "ingress_security_group_ids" {
+  description = "Map of security group IDs allowed to access the runner on port 8080 (for proxy/SSH gateway ECS tasks). Keys are static identifiers, values are security group IDs."
+  type        = map(string)
+  default     = {}
+}
+
+variable "additional_iam_policy_arns" {
+  description = "Additional IAM policy ARNs to attach to the runner role"
+  type        = list(string)
+  default     = []
+}
+
+variable "custom_iam_policy" {
+  description = "Custom IAM policy document (JSON) to attach to the runner role"
+  type        = string
+  default     = null
+}
+
+# Customization
+variable "user_data_append" {
+  description = "Additional user data script to run after base initialization (shell script)"
+  type        = string
+  default     = null
 }
 
 # Tags

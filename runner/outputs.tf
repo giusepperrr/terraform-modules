@@ -1,6 +1,16 @@
 # Copyright (c) 2025 Daytona
 # Licensed under the MIT License - see LICENSE file for details
 
+output "runner_id" {
+  description = "Daytona runner ID"
+  value       = jsondecode(terracurl_request.runner.response).id
+}
+
+output "runner_name" {
+  description = "Daytona runner name"
+  value       = local.runner_name
+}
+
 output "instance_id" {
   description = "ID of the EC2 instance"
   value       = aws_instance.runner.id
