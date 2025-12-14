@@ -1,0 +1,17 @@
+// Copyright (c) 2025 Daytona
+// Licensed under the MIT License - see LICENSE file for details
+// Copy this file to terraform.tfvars and fill in your values
+
+aws_region = "us-east-1"
+
+// Daytona API Configuration
+daytona_api_url = "https://api.daytona.io"
+daytona_api_key = "your-api-key"
+
+// Region Configuration
+region_name     = "example-us-east-1"
+proxy_url       = null // Set to enable proxy, e.g., "https://proxy.example.com:8080"
+ssh_gateway_url = null // Set to enable SSH Gateway, e.g., "ssh-gateway.example.com:2222"
+
+// Runner Configuration
+runner_instance_type = "m7i.2xlarge"
