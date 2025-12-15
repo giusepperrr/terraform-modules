@@ -21,7 +21,7 @@ This Terraform module deploys a Daytona Runner on AWS EC2 with automated install
 
 ```hcl
 module "daytona_runner" {
-  source = "./packaging/terraform"
+  source = "./runner"
 
   # Network Configuration
   vpc_id    = "vpc-1234567890abcdef0"
@@ -32,9 +32,9 @@ module "daytona_runner" {
   instance_type = "t3.medium"
 
   # Daytona Configuration
-  daytona_api_url      = "https://api.daytona.example.com"
-  daytona_runner_token = "your-runner-token-here"
-  runner_version       = "0.1.0"
+  api_url   = "https://daytona.example.com/api"
+  api_key   = "your-api-key-here"
+  region_id = "your-region-id"
 
   # Optional: Enable SSM for secure access
   enable_ssm = true
@@ -50,7 +50,7 @@ module "daytona_runner" {
 
 ```hcl
 module "daytona_runner" {
-  source = "./packaging/terraform"
+  source = "./runner"
 
   name_prefix = "production"
 
@@ -65,9 +65,9 @@ module "daytona_runner" {
   root_volume_type   = "gp3"
 
   # Daytona Configuration
-  daytona_api_url      = "https://api.daytona.example.com"
-  daytona_runner_token = var.runner_token  # Use variable for sensitive data
-  runner_version       = "0.1.0"
+  api_url   = "https://api.daytona.example.com"
+  api_key   = var.api_key  # Use variable for sensitive data
+  region_id = var.region_id
 
   # Security Configuration
   enable_ssh       = true
@@ -90,10 +90,12 @@ module "daytona_runner" {
 | vpc_id | VPC ID where the runner will be deployed | string | - | yes |
 | subnet_id | Subnet ID where the runner will be deployed | string | - | yes |
 | ami_id | AMI ID for the EC2 instance | string | - | yes |
-| daytona_api_url | Daytona API URL | string | - | yes |
-| daytona_runner_token | Daytona runner authentication token | string | - | yes |
+| api_url | Daytona API URL | string | - | yes |
+| api_key | Daytona API key | string | - | yes |
+| region_id | Daytona region ID | string | - | yes |
 | name_prefix | Prefix for resource names | string | "daytona" | no |
-| runner_version | Daytona runner version | string | "0.1.0" | no |
+| runner_name | Name for the runner (used in API registration) | string | null | no |
+| runner_version | Daytona runner version | string | "0.125.0-rc1" | no |
 | instance_type | EC2 instance type | string | "t3.medium" | no |
 | key_name | SSH key pair name | string | null | no |
 | root_volume_type | Root volume type | string | "gp3" | no |
@@ -103,12 +105,19 @@ module "daytona_runner" {
 | enable_ssh | Enable SSH access | bool | false | no |
 | ssh_cidr_blocks | CIDR blocks for SSH access | list(string) | [] | no |
 | enable_ssm | Enable SSM Session Manager | bool | true | no |
+| additional_security_group_ids | Additional security group IDs to attach | list(string) | [] | no |
+| ingress_security_group_ids | Security group IDs allowed to access port 8080 | map(string) | {} | no |
+| additional_iam_policy_arns | Additional IAM policy ARNs to attach | list(string) | [] | no |
+| custom_iam_policy | Custom IAM policy document (JSON) | string | null | no |
+| user_data_append | Additional user data script to run after init | string | null | no |
 | tags | Additional tags | map(string) | {} | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| runner_id | Daytona runner ID |
+| runner_name | Daytona runner name |
 | instance_id | ID of the EC2 instance |
 | instance_private_ip | Private IP address of the instance |
 | instance_public_ip | Public IP address of the instance |
@@ -118,7 +127,7 @@ module "daytona_runner" {
 
 ## Security Considerations
 
-1. **Runner Token**: The `daytona_runner_token` is marked as sensitive. Use Terraform variables or a secrets manager.
+1. **API Key**: The `api_key` is marked as sensitive. Use Terraform variables or a secrets manager.
 2. **SSH Access**: Disabled by default. Use SSM Session Manager instead for better security.
 3. **Encryption**: Root volume is encrypted by default.
 4. **IMDSv2**: Instance Metadata Service v2 is enforced.
