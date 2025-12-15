@@ -29,6 +29,12 @@ variable "ssh_gateway_url" {
   default     = null
 }
 
+variable "snapshot_manager_url" {
+  type        = string
+  description = "Snapshot Manager URL for the region (setting this enables Snapshot Manager deployment), e.g., https://snapshot-manager.example.com"
+  default     = null
+}
+
 // VPC Configuration for ECS
 variable "vpc_id" {
   type        = string
@@ -58,7 +64,7 @@ variable "internal" {
 variable "proxy_image" {
   type        = string
   description = "Docker image for the proxy"
-  default     = "daytonaio/daytona-proxy:v0.125.0-rc.1-07721f11"
+  default     = "daytonaio/daytona-proxy:v0.125.0-rc.4-441e56b7"
 }
 
 variable "proxy_cpu" {
@@ -97,6 +103,32 @@ variable "ssh_gateway_memory" {
   type        = number
   description = "Memory (MB) for SSH Gateway task"
   default     = 512
+}
+
+// Snapshot Manager Configuration
+
+variable "snapshot_manager_image" {
+  type        = string
+  description = "Docker image for the Snapshot Manager"
+  default     = "daytonaio/daytona-snapshot-manager:v0.125.0-rc.4-441e56b"
+}
+
+variable "snapshot_manager_cpu" {
+  type        = number
+  description = "CPU units for Snapshot Manager task"
+  default     = 256
+}
+
+variable "snapshot_manager_memory" {
+  type        = number
+  description = "Memory (MB) for Snapshot Manager task"
+  default     = 512
+}
+
+variable "additional_snapshot_manager_ecs_security_group_ids" {
+  type        = list(string)
+  description = "Additional security group IDs to attach to Snapshot Manager ECS tasks"
+  default     = []
 }
 
 variable "additional_alb_security_group_ids" {

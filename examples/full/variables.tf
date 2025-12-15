@@ -11,6 +11,7 @@ variable "aws_region" {
 variable "daytona_api_url" {
   type        = string
   description = "Daytona API URL"
+  default     = "https://app.daytona.io/api"
 }
 
 variable "daytona_api_key" {
@@ -35,6 +36,13 @@ variable "ssh_gateway_url" {
 variable "proxy_url" {
   type        = string
   description = "Proxy URL for the region (setting this enables proxy deployment), e.g., https://proxy.example.com:8080"
+  default     = null
+}
+
+// Snapshot Manager Configuration
+variable "snapshot_manager_url" {
+  type        = string
+  description = "Snapshot Manager URL for the region (setting this enables Snapshot Manager deployment), e.g., https://snapshots.example.com"
   default     = null
 }
 

@@ -11,7 +11,7 @@ terraform {
     }
     terracurl = {
       source  = "devops-rob/terracurl"
-      version = "~> 1.0"
+      version = "~> 2.0"
     }
   }
 }
@@ -40,7 +40,7 @@ data "aws_ami" "daytona_runner" {
 
   filter {
     name   = "name"
-    values      = ["daytona-runner-docker-ubuntu-24.04-amd64-*"]
+    values = ["daytona-runner-docker-ubuntu-24.04-amd64-*"]
   }
 
   filter {
@@ -69,17 +69,18 @@ module "vpc" {
 
 // Register Daytona region
 module "daytona_region" {
-  source = "../region"
+  source = "../../region"
 
   daytona_api_url = var.daytona_api_url
   daytona_api_key = var.daytona_api_key
   name            = var.region_name
 
-  // Optional proxy and SSH gateway configuration
-  proxy_url       = var.proxy_url
-  ssh_gateway_url = var.ssh_gateway_url
+  // Optional proxy, SSH gateway, and snapshot manager configuration
+  proxy_url            = var.proxy_url
+  ssh_gateway_url      = var.ssh_gateway_url
+  snapshot_manager_url = var.snapshot_manager_url
 
-  // VPC configuration for ECS services (required if proxy or SSH gateway is enabled)
+  // VPC configuration for ECS services (required if proxy, SSH gateway, or snapshot manager is enabled)
   vpc_id             = module.vpc.vpc_id
   public_subnet_ids  = module.vpc.public_subnets
   private_subnet_ids = module.vpc.private_subnets
@@ -87,7 +88,7 @@ module "daytona_region" {
 
 // Deploy Daytona Runner
 module "daytona_runner" {
-  source = "../runner"
+  source = "../../runner"
 
   // Network Configuration
   vpc_id    = module.vpc.vpc_id

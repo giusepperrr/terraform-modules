@@ -18,8 +18,8 @@ write_files:
       DAYTONA_RUNNER_TOKEN=${daytona_runner_token}
 
       # Job Polling Configuration
-      POLL_TIMEOUT=${poll_timeout}
-      POLL_LIMIT=${poll_limit}
+      DAYTONA_RUNNER_POLL_TIMEOUT=${poll_timeout}
+      DAYTONA_RUNNER_POLL_LIMIT=${poll_limit}
 runcmd:
   # Download and install Daytona runner
   - curl -L -o /tmp/daytona-runner.deb "https://download.daytona.io/daytona-ai/runner/daytona-runner_${runner_version}_amd64.deb"

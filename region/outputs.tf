@@ -68,3 +68,34 @@ output "ssh_gateway_ecs_security_group_id" {
   description = "Security group ID for SSH Gateway ECS tasks (if deployed)"
   value       = local.deploy_ssh_gateway ? aws_security_group.ssh_gateway_ecs[0].id : null
 }
+
+// Snapshot Manager outputs
+output "snapshot_manager_alb_dns_name" {
+  description = "ALB DNS name for Snapshot Manager (if deployed)"
+  value       = local.deploy_snapshot_manager ? aws_lb.snapshot_manager[0].dns_name : null
+}
+
+output "snapshot_manager_alb_zone_id" {
+  description = "ALB zone ID for Snapshot Manager Route53 alias (if deployed)"
+  value       = local.deploy_snapshot_manager ? aws_lb.snapshot_manager[0].zone_id : null
+}
+
+output "snapshot_manager_ecs_service_name" {
+  description = "Snapshot Manager ECS service name (if deployed)"
+  value       = local.deploy_snapshot_manager ? aws_ecs_service.snapshot_manager[0].name : null
+}
+
+output "snapshot_manager_ecs_security_group_id" {
+  description = "Security group ID for Snapshot Manager ECS tasks (if deployed)"
+  value       = local.deploy_snapshot_manager ? aws_security_group.snapshot_manager_ecs[0].id : null
+}
+
+output "snapshot_manager_s3_bucket_name" {
+  description = "S3 bucket name for Snapshot Manager (if deployed)"
+  value       = local.deploy_snapshot_manager ? aws_s3_bucket.snapshot_manager[0].id : null
+}
+
+output "snapshot_manager_s3_bucket_arn" {
+  description = "S3 bucket ARN for Snapshot Manager (if deployed)"
+  value       = local.deploy_snapshot_manager ? aws_s3_bucket.snapshot_manager[0].arn : null
+}

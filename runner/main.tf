@@ -10,7 +10,7 @@ terraform {
     }
     terracurl = {
       source  = "devops-rob/terracurl"
-      version = "~> 1.0"
+      version = "~> 2.0"
     }
   }
 }
@@ -21,9 +21,10 @@ locals {
 
 # Register runner via Daytona API
 resource "terracurl_request" "runner" {
-  name   = "daytona-runner-${local.runner_name}"
-  url    = "${var.api_url}/runners"
-  method = "POST"
+  name         = "daytona-runner-${local.runner_name}"
+  url          = "${var.api_url}/runners"
+  method       = "POST"
+  skip_destroy = true
 
   headers = {
     Content-Type  = "application/json"
@@ -38,9 +39,10 @@ resource "terracurl_request" "runner" {
   response_codes = [200, 201]
 
   lifecycle {
-    ignore_changes = [headers, request_body]
+    ignore_changes = [headers, request_body, destroy_headers]
   }
 }
+
 
 # Security group for the runner instance
 resource "aws_security_group" "runner" {

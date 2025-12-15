@@ -10,7 +10,7 @@ terraform {
     }
     terracurl = {
       source  = "devops-rob/terracurl"
-      version = "~> 1.0"
+      version = "~> 2.0"
     }
   }
 }
@@ -59,16 +59,26 @@ locals {
   ssh_gateway_container_port = 2222 // Unprivileged port for container
   deploy_ssh_gateway         = var.ssh_gateway_url != null
 
-  deploy_ecs = local.deploy_proxy || local.deploy_ssh_gateway
+  // Parse snapshot manager URL: https://snapshot-manager.example.com:8080 -> protocol, domain, port
+  snapshot_manager_url_regex      = var.snapshot_manager_url != null ? regex("^(https?)://([^:/]+):?([0-9]*)$", var.snapshot_manager_url) : null
+  snapshot_manager_protocol       = local.snapshot_manager_url_regex != null ? local.snapshot_manager_url_regex[0] : null
+  snapshot_manager_domain         = local.snapshot_manager_url_regex != null ? local.snapshot_manager_url_regex[1] : null
+  snapshot_manager_port           = local.snapshot_manager_url_regex != null ? (local.snapshot_manager_url_regex[2] != "" ? tonumber(local.snapshot_manager_url_regex[2]) : (local.snapshot_manager_protocol == "https" ? 443 : 80)) : null
+  snapshot_manager_container_port = 5000
+  deploy_snapshot_manager         = true
+
+  deploy_ecs = local.deploy_proxy || local.deploy_ssh_gateway || local.deploy_snapshot_manager
 }
 
 // Data sources
 data "aws_region" "current" {}
 
 data "aws_vpc" "selected" {
-  count = local.deploy_ssh_gateway ? 1 : 0
+  count = local.deploy_ssh_gateway || local.deploy_snapshot_manager ? 1 : 0
   id    = var.vpc_id
 }
+
+data "aws_caller_identity" "current" {}
 
 // Shared ECS Cluster for proxy and SSH gateway
 resource "aws_ecs_cluster" "main" {

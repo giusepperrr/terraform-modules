@@ -104,6 +104,10 @@ resource "aws_ecs_task_definition" "proxy" {
       {
         name  = "PROXY_PROTOCOL"
         value = local.proxy_protocol
+      },
+      {
+        name  = "REDIS_HOST",
+        value = ""
       }
     ]
 
