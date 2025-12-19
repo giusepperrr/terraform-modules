@@ -74,7 +74,7 @@ variable "runner_name" {
 variable "runner_version" {
   description = "Daytona runner version"
   type        = string
-  default     = "0.125.0-rc1"
+  default     = "0.127.0-rc.1"
 }
 
 # Runner Configuration (optional)
@@ -131,6 +131,19 @@ variable "custom_iam_policy" {
   description = "Custom IAM policy document (JSON) to attach to the runner role"
   type        = string
   default     = null
+}
+
+# Cloud-init Configuration
+variable "cloud_init_package_update" {
+  description = "Run package update during cloud-init"
+  type        = bool
+  default     = false
+}
+
+variable "cloud_init_package_upgrade" {
+  description = "Run package upgrade during cloud-init"
+  type        = bool
+  default     = false
 }
 
 # Customization

@@ -166,6 +166,8 @@ data "cloudinit_config" "runner" {
       runner_version       = var.runner_version
       poll_timeout         = var.poll_timeout
       poll_limit           = var.poll_limit
+      package_update       = var.cloud_init_package_update
+      package_upgrade      = var.cloud_init_package_upgrade
     })
   }
 

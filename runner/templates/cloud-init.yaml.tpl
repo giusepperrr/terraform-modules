@@ -2,8 +2,8 @@
 # Copyright (c) 2025 Daytona
 # Licensed under the MIT License - see LICENSE file for details
 
-package_update: true
-package_upgrade: true
+package_update: ${package_update}
+package_upgrade: ${package_upgrade}
 
 packages:
   - curl
